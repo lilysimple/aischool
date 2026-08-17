@@ -1,0 +1,22 @@
+# Секреты — никогда в репозиторий
+.env
+
+# Окружение и мусор
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Результаты запусков
+output/
+
+# Материалы автора: у каждого студента свои
+input/photos/*
+!input/photos/README.md
+!input/photos/example.jpg
+input/refs/*
+!input/refs/README.md
+
+# Собирается скиллом brand-setup под конкретного автора
+brand/concept.md
+brand/voice.md

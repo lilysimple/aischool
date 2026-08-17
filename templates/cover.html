@@ -1,0 +1,105 @@
+<!doctype html>
+<!--
+  Шаблон обложки поста: фотография + текстовая плашка поверх.
+
+  Как это работает: render_cover.py подставляет сюда путь к фото и текст,
+  открывает страницу в браузере и делает скриншот. Никакой генерации
+  изображений — обычная вёрстка, поэтому шрифты не «пляшут», а правка
+  отступа это правка одной строки CSS.
+
+  Что можно менять: значения в блоке :root и размеры шрифтов ниже.
+  Что менять нельзя: id элементов (#photo, #kicker, #title, #handle) —
+  по ним render_cover.py подставляет содержимое.
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ── Цвета плашки. Эти значения подгоняет скилл brand-setup по вашим рефам ── */
+  --plate-bg:      rgba(14, 16, 22, .82);  /* фон плашки, полупрозрачный */
+  --plate-ink:     #FFFFFF;                /* цвет заголовка */
+  --plate-accent:  #F0B429;                /* акцент: кикер и полоска */
+  --plate-radius:  22px;
+  --plate-pad:     44px;
+
+  /* ── Затемнение фото под плашкой, чтобы текст читался ── */
+  --photo-dim:     .38;
+
+  /* ── Размеры шрифтов ── */
+  --kicker-size:   26px;
+  --title-size:    62px;
+  --handle-size:   24px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1080px;overflow:hidden}
+body{font-family:'Inter',-apple-system,sans-serif}
+
+.canvas{position:relative;width:1080px;height:1080px;background:#0E1016}
+
+/* Фотография на весь кадр */
+#photo{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;
+}
+/* Затемняющий слой — без него светлое фото съедает текст */
+.dim{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,
+    rgba(0,0,0,calc(var(--photo-dim) * .5)) 0%,
+    rgba(0,0,0,var(--photo-dim)) 55%,
+    rgba(0,0,0,calc(var(--photo-dim) * 1.5)) 100%);
+}
+
+/* Плашка с текстом */
+.plate{
+  position:absolute;left:56px;right:56px;bottom:56px;
+  background:var(--plate-bg);
+  border-radius:var(--plate-radius);
+  padding:var(--plate-pad);
+  backdrop-filter:blur(14px);
+}
+#kicker{
+  font-size:var(--kicker-size);font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--plate-accent);margin-bottom:18px;
+}
+#kicker:empty{display:none}
+
+#title{
+  font-size:var(--title-size);font-weight:800;line-height:1.1;
+  letter-spacing:-.02em;color:var(--plate-ink);
+  text-wrap:balance;
+}
+
+.rule{
+  height:5px;width:88px;background:var(--plate-accent);
+  border-radius:3px;margin-top:28px;
+}
+
+#handle{
+  position:absolute;top:56px;right:56px;
+  font-size:var(--handle-size);font-weight:600;
+  color:var(--plate-ink);opacity:.85;
+  background:rgba(0,0,0,.35);
+  padding:10px 18px;border-radius:999px;
+  backdrop-filter:blur(8px);
+}
+#handle:empty{display:none}
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <img id="photo" src="">
+    <div class="dim"></div>
+    <div id="handle"></div>
+    <div class="plate">
+      <div id="kicker"></div>
+      <div id="title"></div>
+      <div class="rule"></div>
+    </div>
+  </div>
+</body>
+</html>
