@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ДЗ: GitHub и превращение промпта в скилл</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#FAFAFC; --card:#FFFFFF; --ink:#13161D; --muted:#5B6575;
+  --line:#E6E9EF; --accent:#B4770B; --accent-soft:#FFF7E6;
+  --ok:#1F7A4D; --ok-soft:#F0F8F3; --warn:#B3261E; --warn-soft:#FEF3F2;
+  --code:#15171E; --max:900px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Inter',-apple-system,'Segoe UI',sans-serif;
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+  padding:0 20px 100px;
+}
+.wrap{max-width:var(--max);margin:0 auto}
+
+/* ── Шапка ─────────────────────────────────────────────────────────── */
+header{padding:64px 0 40px;border-bottom:1px solid var(--line);margin-bottom:40px}
+.tagline{font-size:14px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin-bottom:16px}
+h1{font-size:42px;line-height:1.12;letter-spacing:-.03em;font-weight:700;
+  margin-bottom:18px;text-wrap:balance}
+.lead{font-size:19px;color:var(--muted);max-width:660px;text-wrap:pretty}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:9px 14px;font-size:14.5px;color:var(--muted)}
+.fact b{color:var(--ink);font-weight:600}
+
+/* ── Типографика ───────────────────────────────────────────────────── */
+h2{font-size:30px;line-height:1.2;letter-spacing:-.025em;font-weight:700;
+  margin:56px 0 18px;text-wrap:balance;scroll-margin-top:20px}
+h3{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:32px 0 12px}
+p{margin-bottom:14px;text-wrap:pretty}
+a{color:var(--accent);text-underline-offset:3px}
+ul,ol{margin:0 0 16px 22px}
+li{margin-bottom:8px}
+strong{font-weight:600}
+code{font-family:'JetBrains Mono',monospace;font-size:.87em;
+  background:#EEF0F5;padding:2px 6px;border-radius:5px}
+hr{border:none;border-top:1px solid var(--line);margin:44px 0}
+
+/* ── Шаги ──────────────────────────────────────────────────────────── */
+.step{margin:52px 0 0}
+.step-h{display:flex;gap:16px;align-items:flex-start;margin-bottom:6px}
+.num{flex:none;width:42px;height:42px;border-radius:12px;background:var(--ink);
+  color:#fff;display:grid;place-items:center;font-weight:700;font-size:18px;margin-top:2px}
+.step-h h2{margin:0;font-size:27px}
+.dur{font-size:14px;color:var(--muted);margin-top:4px}
+
+/* ── Вход / выход ──────────────────────────────────────────────────── */
+.io{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0 22px}
+.io > div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.io .ttl{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:600;color:var(--muted);margin-bottom:8px}
+.io .in-t{color:var(--accent)}
+.io .out-t{color:var(--ok)}
+.io p{font-size:15.5px;margin:0;color:var(--ink)}
+.io ul{margin:0 0 0 18px;font-size:15.5px}
+.io li{margin-bottom:4px}
+
+/* ── Код ───────────────────────────────────────────────────────────── */
+.codewrap{position:relative;margin:18px 0 22px}
+pre{background:var(--code);color:#DCE0E8;border-radius:12px;padding:18px 20px;
+  overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.7}
+pre .c{color:#7B8395}
+.copy{position:absolute;top:10px;right:10px;background:#2C2F39;color:#C9CFDA;
+  border:none;border-radius:8px;padding:6px 12px;font-size:12.5px;cursor:pointer;
+  font-family:'Inter',sans-serif;opacity:.85}
+.copy:hover{opacity:1;background:#3A3E4A}
+.copy.done{background:#1F7A4D;color:#fff}
+
+/* ── Картинки ──────────────────────────────────────────────────────── */
+figure{margin:22px 0 26px}
+figure img{width:100%;display:block;border-radius:12px;border:1px solid var(--line)}
+figcaption{font-size:14px;color:var(--muted);margin-top:9px;padding-left:2px}
+
+/* ── Плашки ────────────────────────────────────────────────────────── */
+.box{border-radius:12px;padding:16px 20px;margin:20px 0;font-size:16px}
+.tip{background:var(--accent-soft);border:1px solid #F0DFB8}
+.warn{background:var(--warn-soft);border:1px solid #F5D2CE}
+.ok{background:var(--ok-soft);border:1px solid #CFE7DA}
+.box .bt{font-weight:600;margin-bottom:5px;display:block}
+.box p:last-child{margin-bottom:0}
+
+/* ── Чеклист ───────────────────────────────────────────────────────── */
+.check{list-style:none;margin:18px 0 22px}
+.check li{display:flex;gap:12px;align-items:flex-start;background:var(--card);
+  border:1px solid var(--line);border-radius:10px;padding:12px 15px;margin-bottom:8px;
+  cursor:pointer;transition:.15s;font-size:16px}
+.check li:hover{border-color:#D3D8E2}
+.check li.on{background:var(--ok-soft);border-color:#CFE7DA}
+.check li.on .txt{color:var(--muted);text-decoration:line-through}
+.bx{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid #C6CCD8;
+  margin-top:1px;display:grid;place-items:center;font-size:14px;color:#fff}
+.check li.on .bx{background:var(--ok);border-color:var(--ok)}
+.check li.on .bx::after{content:'✓'}
+
+/* ── Таблицы ───────────────────────────────────────────────────────── */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15.5px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th{text-align:left;padding:12px 16px;background:#F4F6FA;font-weight:600;font-size:14px;
+  border-bottom:1px solid var(--line)}
+td{padding:12px 16px;border-bottom:1px solid #F0F2F6;vertical-align:top}
+tr:last-child td{border-bottom:none}
+
+/* ── Схема ─────────────────────────────────────────────────────────── */
+.scheme{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:24px 0}
+.sc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.sc .h{font-weight:600;font-size:17px;margin-bottom:4px;display:flex;gap:9px;align-items:center}
+.sc .h span{font-size:12px;background:var(--accent-soft);color:var(--accent);
+  padding:3px 8px;border-radius:20px;font-weight:600;letter-spacing:.04em}
+.sc p{font-size:15px;color:var(--muted);margin:0}
+.sc .files{margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink)}
+
+/* ── Оглавление ────────────────────────────────────────────────────── */
+.toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 24px}
+.toc .t{font-weight:600;margin-bottom:10px}
+.toc ol{margin:0 0 0 20px;font-size:16px}
+.toc li{margin-bottom:5px}
+.toc a{color:var(--ink);text-decoration:none}
+.toc a:hover{color:var(--accent)}
+
+/* ── Прогресс ──────────────────────────────────────────────────────── */
+.prog{position:fixed;right:22px;bottom:22px;background:var(--ink);color:#fff;
+  padding:10px 16px;border-radius:100px;font-size:14px;font-weight:500;
+  box-shadow:0 6px 22px rgba(15,20,35,.24);z-index:10}
+.prog b{color:#FFD230}
+
+.badpair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.badpair > div{border-radius:12px;padding:15px 18px;font-size:15.5px}
+.bad{background:var(--warn-soft);border:1px solid #F5D2CE}
+.good{background:var(--ok-soft);border:1px solid #CFE7DA}
+.badpair .lbl{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;
+  font-weight:600;margin-bottom:6px}
+.bad .lbl{color:var(--warn)} .good .lbl{color:var(--ok)}
+
+@media (max-width:720px){
+  body{font-size:16px;padding:0 16px 80px}
+  h1{font-size:31px} h2{font-size:24px} .step-h h2{font-size:22px}
+  .io,.scheme,.badpair{grid-template-columns:1fr}
+  .num{width:36px;height:36px;font-size:16px}
+  .prog{right:12px;bottom:12px}
+}
+@media print{
+  .prog,.copy{display:none}
+  body{background:#fff}
+  .step{break-inside:avoid}
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="tagline">Домашнее задание · базовый уровень</div>
+  <h1>Заберите проект с GitHub и превратите свой промпт в скилл</h1>
+  <p class="lead">Две части. В первой вы заводите аккаунт на GitHub, забираете проект
+  курса и учитесь выкладывать туда свои файлы — мышкой, без терминала. Во второй
+  берёте промпт, который сами повторяете каждую неделю, и превращаете его в скилл,
+  который запускается одной фразой.</p>
+  <div class="facts">
+    <div class="fact">Время: <b>~70 минут</b></div>
+    <div class="fact">Терминал: <b>не нужен</b></div>
+    <div class="fact">Опыт программирования: <b>не нужен</b></div>
+    <div class="fact">Нужен: <b>аккаунт Claude с Claude Code</b></div>
+  </div>
+</header>
+
+<div class="toc">
+  <div class="t">Что будем делать</div>
+  <ol>
+    <li><a href="#result">Что получится в конце</a></li>
+    <li><a href="#why">Зачем вам GitHub, если вы не программист</a></li>
+    <li><a href="#s1">Шаг 1. Завести аккаунт</a></li>
+    <li><a href="#s2">Шаг 2. Забрать проект курса</a></li>
+    <li><a href="#s3">Шаг 3. Создать свой репозиторий</a></li>
+    <li><a href="#s4">Шаг 4. Загрузить файлы мышкой</a></li>
+    <li><a href="#skills">Часть 2. Промпт становится скиллом</a></li>
+    <li><a href="#s5">Шаг 5. Найти свой повторяющийся промпт</a></li>
+    <li><a href="#s6">Шаг 6. Разобрать устройство скилла</a></li>
+    <li><a href="#s7">Шаг 7. Написать description</a></li>
+    <li><a href="#s8">Шаг 8. Дописать четыре вещи</a></li>
+    <li><a href="#s9">Шаг 9. Проверить, что скилл срабатывает</a></li>
+    <li><a href="#s10">Шаг 10. Выложить скилл к себе</a></li>
+    <li><a href="#submit">Что сдать</a></li>
+    <li><a href="#errors">Если что-то сломалось</a></li>
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2 id="result">Что получится в конце</h2>
+
+<p>У вас будет аккаунт на GitHub, свой репозиторий с домашней работой и
+работающий скилл, который вы написали сами под свою задачу.</p>
+
+<p>Главное — не аккаунт и не репозиторий. Главное вот что: вы перестанете
+каждый раз объяснять модели одно и то же. Промпт, который вы держите в заметках
+и копируете в чат по десять раз в неделю, станет файлом, который запускается
+фразой «сделай мне сводку по продажам» — и работает одинаково хорошо
+и сегодня, и через месяц.</p>
+
+<div class="box tip">
+  <span class="bt">Терминал не понадобится</span>
+  <p>Всё делается в браузере, мышкой. Если вы уже дружите с командной строкой —
+  в конце каждого шага есть блок с командами, но это необязательный путь.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2 id="why">Зачем вам GitHub, если вы не программист</h2>
+
+<p>GitHub — это не только для кода. Это место, где текстовые файлы лежат
+с историей изменений: видно, что поменялось, когда и кем, и можно вернуться
+к любой прошлой версии.</p>
+
+<p>Для вас в этом курсе у него три роли:</p>
+
+<div class="scheme">
+  <div class="sc">
+    <div class="h">Забрать <span>ОТКУДА БЕРЁМ</span></div>
+    <p>Проект агента лежит в репозитории курса. Скачали одной кнопкой —
+    и у вас на компьютере вся структура папок, ничего не потеряно.</p>
+    <div class="files">github.com/lilysimple/aischool</div>
+  </div>
+  <div class="sc">
+    <div class="h">Сохранить <span>ГДЕ ХРАНИМ</span></div>
+    <p>Ваши скиллы и настройки бренда — это текстовые файлы. На GitHub они
+    не пропадут вместе с ноутбуком и будут доступны с любого устройства.</p>
+    <div class="files">ваш репозиторий</div>
+  </div>
+  <div class="sc">
+    <div class="h">Показать <span>КАК СДАЁМ</span></div>
+    <p>Домашнюю работу вы сдаёте ссылкой. Проверяющий открывает её в браузере
+    и видит ваши файлы — ничего не надо архивировать и пересылать.</p>
+    <div class="files">ссылка на репозиторий</div>
+  </div>
+</div>
+
+<div class="box warn">
+  <span class="bt">Что нельзя выкладывать на GitHub</span>
+  <p>Пароли, токены, ключи API. Публичный репозиторий видят все, и роботы
+  сканируют новые файлы за минуты — украденный токен начинает жить своей
+  жизнью раньше, чем вы успеете его удалить.</p>
+  <p>В проекте агента для этого заведён файл <code>.gitignore</code>: он
+  говорит гиту, какие файлы не трогать. Файл <code>.env</code>, где лежит
+  токен бота, туда уже вписан. Не удаляйте эту строку.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s1">
+<div class="step-h"><div class="num">1</div>
+  <div><h2>Завести аккаунт</h2><div class="dur">5 минут · браузер</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>почта, к которой у вас есть доступ прямо сейчас</li>
+    <li>телефон под рукой</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>аккаунт и адрес вида <code>github.com/ваш-логин</code></li></ul></div>
+</div>
+
+<p>Откройте <a href="https://github.com/signup">github.com/signup</a> и заполните
+три поля: почта, пароль, логин. Дальше почтовый код подтверждения — он приходит
+за минуту.</p>
+
+<h3>Логин выбирайте вдумчиво</h3>
+
+<p>Он попадёт в адрес всех ваших репозиториев и в ссылку, которую вы сдадите
+преподавателю. Поменять его потом можно, но все старые ссылки при этом сломаются.</p>
+
+<div class="badpair">
+  <div class="bad"><div class="lbl">Так не надо</div>
+    <code>kotik2015</code>, <code>anna_ivanova_1987</code>,
+    <code>qwerty12345</code> — такую ссылку неловко ставить в резюме.</div>
+  <div class="good"><div class="lbl">Так работает</div>
+    <code>anna-ivanova</code>, <code>aivanova</code>, <code>anna-ai</code> —
+    имя или его сокращение, латиницей, через дефис.</div>
+</div>
+
+<p>На вопрос про платный тариф отвечайте «бесплатный»: всё, что нужно в этом
+курсе, входит в бесплатный план, включая приватные репозитории.</p>
+
+<div class="box tip">
+  <span class="bt">Включите двухфакторную аутентификацию</span>
+  <p>GitHub попросит это сделать сам, и откладывать не стоит: без второго
+  фактора аккаунт со временем заблокируют. Проще всего привязать телефон —
+  Settings → Password and authentication → Two-factor authentication.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s2">
+<div class="step-h"><div class="num">2</div>
+  <div><h2>Забрать проект курса</h2><div class="dur">5 минут · браузер</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>аккаунт из шага 1</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>папка с проектом агента на вашем компьютере</li>
+    <li>копия репозитория курса в вашем аккаунте</li></ul></div>
+</div>
+
+<p>Откройте репозиторий курса:</p>
+
+<div class="codewrap"><pre>https://github.com/lilysimple/aischool</pre></div>
+
+<p>Забрать его можно двумя способами, и они решают разные задачи.
+Сделайте оба — это займёт минуту.</p>
+
+<h3>Способ 1. Fork — копия репозитория в вашем аккаунте</h3>
+
+<p>Нажмите кнопку <b>Fork</b> в правом верхнем углу, затем <b>Create fork</b>.
+В вашем аккаунте появится полная копия проекта по адресу
+<code>github.com/ваш-логин/aischool</code>.</p>
+
+<p>Зачем это нужно: копия остаётся связанной с оригиналом. Если в проекте курса
+что-то поправят, вы увидите это и сможете подтянуть изменения к себе.</p>
+
+<h3>Способ 2. Download ZIP — файлы на компьютер</h3>
+
+<p>Нажмите зелёную кнопку <b>Code</b> и в выпавшем меню выберите
+<b>Download ZIP</b>. Скачается архив, распакуйте его двойным щелчком.</p>
+
+<div class="box warn">
+  <span class="bt">Проверьте, что распаковалось всё</span>
+  <p>Внутри должны быть папки <code>scripts</code>, <code>templates</code>,
+  <code>input</code>, <code>prompts</code> и файл <code>README.md</code>.</p>
+  <p>Папку <code>.claude</code> вы, скорее всего, не увидите: имена, начинающиеся
+  с точки, macOS скрывает. Это нормально, папка на месте. Чтобы показать
+  скрытые файлы в Finder, нажмите <b>Cmd + Shift + точка</b> — они появятся
+  бледно-серыми. Именно в <code>.claude/skills/</code> лежат скиллы, с которыми
+  мы будем работать во второй части.</p>
+</div>
+
+<div class="box tip">
+  <span class="bt">Если вы дружите с терминалом</span>
+  <p>Вместо скачивания архива:</p>
+  <div class="codewrap"><pre>git clone https://github.com/lilysimple/aischool.git</pre></div>
+  <p>Разница в том, что клонированная папка помнит, откуда взялась, и умеет
+  обновляться командой <code>git pull</code>.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s3">
+<div class="step-h"><div class="num">3</div>
+  <div><h2>Создать свой репозиторий</h2><div class="dur">5 минут · браузер</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>аккаунт из шага 1</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>пустой репозиторий <code>ai-school-homework</code></li>
+    <li>ссылка, которую вы потом сдадите</li></ul></div>
+</div>
+
+<p>Форк из шага 2 — это копия чужого проекта. Домашнюю работу удобнее сдавать
+в отдельном репозитории, где лежит только ваше.</p>
+
+<p>Нажмите <b>+</b> в правом верхнем углу любой страницы GitHub →
+<b>New repository</b>. Заполните так:</p>
+
+<table>
+  <tr><th style="width:34%">Поле</th><th>Что ставим</th></tr>
+  <tr><td><b>Repository name</b></td>
+      <td><code>ai-school-homework</code> — латиницей, без пробелов. Пробелы GitHub
+      всё равно заменит на дефисы, лучше сразу писать правильно.</td></tr>
+  <tr><td><b>Description</b></td>
+      <td>Одна строка: «Домашние работы курса AI School». Необязательно,
+      но через месяц вы себе спасибо скажете.</td></tr>
+  <tr><td><b>Public / Private</b></td>
+      <td>См. блок ниже — это единственное решение, которое здесь надо принять
+      осознанно.</td></tr>
+  <tr><td><b>Add a README file</b></td>
+      <td>Поставьте галочку. Без неё репозиторий создастся пустым, и GitHub
+      покажет страницу с командами вместо файлов.</td></tr>
+</table>
+
+<p>Нажмите <b>Create repository</b>.</p>
+
+<div class="box warn">
+  <span class="bt">Public или Private — что выбрать</span>
+  <p><b>Public</b> видят все, включая будущих работодателей. Для учебных
+  материалов это плюс: получается портфолио. Ссылку можно показывать.</p>
+  <p><b>Private</b> видите только вы и те, кого вы пригласите. Выбирайте его,
+  если в домашней работе будут внутренние данные компании, реальные тексты
+  клиентов или что-то, что вы не готовы показать миру.</p>
+  <p>Поменять видимость можно в любой момент: Settings → General → в самом низу
+  Danger Zone → Change visibility. Если сомневаетесь — начните с Private,
+  открыть всегда проще, чем отозвать.</p>
+</div>
+
+<div class="box ok">
+  <span class="bt">Запишите ссылку</span>
+  <p>Адрес вида <code>github.com/ваш-логин/ai-school-homework</code> — это
+  и есть то, что вы сдадите в конце. Скопируйте его из адресной строки
+  и сохраните.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s4">
+<div class="step-h"><div class="num">4</div>
+  <div><h2>Загрузить файлы мышкой</h2><div class="dur">10 минут · браузер</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>репозиторий из шага 3</li>
+    <li>любой файл для пробы — подойдёт текстовый</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>файл лежит в репозитории</li>
+    <li>вы умеете обновлять его и видеть историю правок</li></ul></div>
+</div>
+
+<p>Это навык, ради которого затевался весь первый блок. Потренируйтесь на
+черновом файле, прежде чем выкладывать работу.</p>
+
+<h3>Загрузка</h3>
+
+<p>На главной странице репозитория найдите кнопку <b>Add file</b> над списком
+файлов и выберите <b>Upload files</b>. Дальше перетащите файлы в окно браузера
+или нажмите <b>choose your files</b>.</p>
+
+<p>Внизу страницы поле <b>Commit message</b> — это подпись к изменению.
+Оставлять её пустой можно, GitHub подставит своё, но привычка писать
+осмысленно окупается: через месяц вы будете листать историю и понимать, что
+происходило.</p>
+
+<div class="badpair">
+  <div class="bad"><div class="lbl">Так не надо</div>
+    <code>update</code>, <code>изменения</code>, <code>1</code>,
+    <code>asdf</code> — не отвечает на вопрос «что изменилось».</div>
+  <div class="good"><div class="lbl">Так работает</div>
+    <code>Добавила скилл для еженедельного отчёта</code>,
+    <code>Поправила description, скилл не срабатывал</code>.</div>
+</div>
+
+<p>Оставьте выбранным вариант <b>Commit directly to the main branch</b>
+и нажмите <b>Commit changes</b>. Файл появится в списке.</p>
+
+<div class="box tip">
+  <span class="bt">Про папки</span>
+  <p>Отдельной кнопки «создать папку» на GitHub нет — и это сбивает с толку.
+  Папка появляется вместе с файлом: при загрузке перетащите папку целиком,
+  либо в поле имени файла напишите путь через косую черту, например
+  <code>skills/weekly-report/SKILL.md</code>. Гит создаст обе папки сам.</p>
+  <p>Из этого следует и обратное: пустую папку положить в репозиторий нельзя.</p>
+</div>
+
+<h3>Как обновить файл, который уже лежит</h3>
+
+<p>Откройте файл в репозитории и нажмите на карандаш в правом верхнем углу.
+Правьте прямо в браузере, внизу снова <b>Commit changes</b>.</p>
+
+<p>Каждое сохранение — отдельная точка в истории. Посмотреть все версии файла
+можно кнопкой <b>History</b> над его содержимым: слева даты и подписи, справа
+подсветка того, что именно изменилось — зелёным добавленное, красным удалённое.
+Это и есть то, ради чего стоит терпеть незнакомый интерфейс.</p>
+
+<div class="box warn">
+  <span class="bt">Два ограничения, о которые спотыкаются</span>
+  <p>Через браузер можно загрузить <b>не больше 100 файлов за раз</b>,
+  и каждый <b>не тяжелее 25 МБ</b>. Папка с фотографиями для агента легко
+  упирается в оба — её выкладывать и не нужно.</p>
+  <p>Если в файле окажется похожий на токен текст, GitHub заблокирует загрузку
+  и покажет предупреждение. Это защита, а не ошибка: уберите секрет из файла
+  и попробуйте снова.</p>
+</div>
+</div>
+
+<hr>
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2 id="skills">Часть 2. Промпт становится скиллом</h2>
+
+<p>Дальше — то, ради чего задание придумано. Первая часть была про то, где
+хранить файлы. Эта — про то, что в них писать.</p>
+
+<p>Скилл — это текстовый файл с инструкцией, который Claude Code подхватывает
+сам, когда вы формулируете задачу похожими словами. Никакого кода. Разница
+между промптом и скиллом не в сложности, а в том, что промпт живёт в вашей
+голове и в буфере обмена, а скилл — в файле, и работает одинаково у вас,
+у коллеги и через полгода.</p>
+
+<div class="scheme">
+  <div class="sc">
+    <div class="h">Промпт <span>РАЗОВЫЙ</span></div>
+    <p>Вы держите его в заметках, копируете в чат, каждый раз дописываете
+    детали руками. Результат зависит от того, что вы не забыли добавить сегодня.</p>
+    <div class="files">заметки · буфер обмена</div>
+  </div>
+  <div class="sc">
+    <div class="h">Скилл <span>ПОСТОЯННЫЙ</span></div>
+    <p>Лежит файлом, запускается обычной фразой, помнит все детали, включая
+    те, что вы вспомнили на третий раз. Правится как обычный текст.</p>
+    <div class="files">.claude/skills/имя/SKILL.md</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s5">
+<div class="step-h"><div class="num">5</div>
+  <div><h2>Найти свой повторяющийся промпт</h2><div class="dur">10 минут · честность с собой</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>история ваших переписок с моделью</li>
+    <li>задача, которую вы делаете регулярно</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>один выбранный промпт, записанный целиком</li></ul></div>
+</div>
+
+<p>Откройте историю чатов и найдите то, что просите чаще всего. Не самое
+сложное — самое частое.</p>
+
+<p>Признак хорошего кандидата: вы уже ловили себя на мысли «я это на прошлой
+неделе объяснял». Второй признак: результат вас устраивает не всегда,
+и вы дописываете уточнения в переписке.</p>
+
+<div class="badpair">
+  <div class="bad"><div class="lbl">Плохой кандидат</div>
+    «Объясни, как работает нейросеть» — разовое любопытство. Ответ нужен один
+    раз, повторять нечего.</div>
+  <div class="good"><div class="lbl">Хороший кандидат</div>
+    «Сделай сводку по недельным продажам из этой выгрузки» — делаете каждый
+    понедельник, формат один и тот же, детали каждый раз объясняете заново.</div>
+</div>
+
+<p>Ещё примеры того, что хорошо ложится в скилл:</p>
+
+<ul>
+  <li>разобрать письмо клиента и предложить три варианта ответа;</li>
+  <li>переписать текст в тон вашей компании;</li>
+  <li>проверить документ по чек-листу, который у вас в голове;</li>
+  <li>собрать повестку встречи из переписки;</li>
+  <li>перевести описание задачи на язык, понятный подрядчику.</li>
+</ul>
+
+<p>Выпишите выбранный промпт целиком, со всеми уточнениями, которые обычно
+дописываете в переписке. Это черновик — с ним будем работать дальше.</p>
+
+<div class="box tip">
+  <span class="bt">Не знаете, что выбрать — спросите модель</span>
+  <p>Откройте чат, где вы работаете чаще всего, и попросите:
+  «Посмотри нашу переписку за последний месяц и назови три задачи, которые
+  я прошу чаще всего». Список бывает неожиданным.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s6">
+<div class="step-h"><div class="num">6</div>
+  <div><h2>Разобрать устройство скилла</h2><div class="dur">10 минут · чтение</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>распакованный проект из шага 2</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>понимание, из чего состоит <code>SKILL.md</code></li></ul></div>
+</div>
+
+<p>Откройте любой готовый скилл из проекта — например
+<code>.claude/skills/post-writer/SKILL.md</code>. Открывается он в обычном
+текстовом редакторе, это просто текст.</p>
+
+<p>Файл устроен из двух частей:</p>
+
+<div class="codewrap"><pre>---
+name: post-writer
+description: Пишет текст поста для Telegram-канала...
+---
+
+# Текст поста
+
+Ты — автор канала, а не копирайтер вообще...</pre></div>
+
+<p>Сверху между двумя строчками из трёх дефисов — <b>шапка</b>. В ней два поля:
+<code>name</code> должно совпадать с именем папки, а <code>description</code>
+решает, <b>когда</b> скилл запускается.</p>
+
+<p>Всё, что ниже, — <b>тело</b>: сама инструкция, которую модель прочитает,
+когда скилл сработает. Здесь вы пишете что и как делать.</p>
+
+<div class="box warn">
+  <span class="bt">Главное недоразумение новичков</span>
+  <p><code>description</code> — это не краткий пересказ для человека.
+  Это то, по чему Claude Code решает, запускать скилл или нет. Модель видит
+  список описаний всех скиллов, сравнивает с вашей фразой и выбирает.</p>
+  <p>Отсюда правило: в описании должны быть <b>слова, которыми вы реально
+  формулируете задачу</b>. Не те, которыми красиво называется процесс.</p>
+</div>
+
+<h3>Где живёт скилл</h3>
+
+<p>Скиллы лежат в папке <code>.claude/skills/</code>. Одна папка — один скилл,
+внутри файл <code>SKILL.md</code>. Имя папки и есть имя скилла:</p>
+
+<div class="codewrap"><pre>.claude/
+  skills/
+    weekly-report/
+      SKILL.md
+    client-reply/
+      SKILL.md</pre></div>
+
+<p>Положите папку внутрь рабочего проекта — и скилл будет доступен в нём.
+Положите в домашнюю папку (<code>~/.claude/skills/</code>) — будет доступен
+везде. Для вашего первого скилла берите второй вариант, если задача не привязана
+к конкретному проекту.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s7">
+<div class="step-h"><div class="num">7</div>
+  <div><h2>Написать description</h2><div class="dur">10 минут · текстовый редактор</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>промпт из шага 5</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>папка со скиллом и заполненной шапкой</li></ul></div>
+</div>
+
+<p>Создайте папку и файл. Имя папки — латиницей, через дефис, по сути задачи:
+<code>weekly-report</code>, <code>client-reply</code>, <code>doc-check</code>.</p>
+
+<p>Теперь самое важное поле во всём файле. Хорошее описание состоит из трёх
+частей: <b>что делает</b>, <b>с чем работает</b> и <b>какими словами
+это просят</b>.</p>
+
+<div class="badpair">
+  <div class="bad"><div class="lbl">Так не надо</div>
+    <code>description: Помогает с отчётами</code>
+    <br><br>Не сработает или сработает невпопад: под «помогает с отчётами»
+    подходит половина возможных просьб.</div>
+  <div class="good"><div class="lbl">Так работает</div>
+    <code>description: Собирает еженедельную сводку по продажам из выгрузки
+    CSV: считает выручку по менеджерам, сравнивает с прошлой неделей
+    и отмечает отклонения больше 15%. Триггеры - "сводка за неделю",
+    "отчёт по продажам", "посчитай выручку", "сравни с прошлой неделей".</code></div>
+</div>
+
+<p>Приём, который экономит время: выпишите пять-шесть фраз, которыми вы
+<b>на самом деле</b> формулируете эту задачу, включая небрежные, и вставьте
+их в описание после слова «Триггеры». Именно небрежные формулировки
+и встречаются в жизни чаще всего.</p>
+
+<div class="box tip">
+  <span class="bt">Проверка описания на прочность</span>
+  <p>Прочитайте своё описание и спросите: подойдёт ли оно к трём другим
+  задачам, которые я тоже делаю? Если да — оно слишком общее, скилл будет
+  запускаться не вовремя. Добавьте конкретики: с какими файлами работает,
+  что именно считает, что отдаёт на выходе.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s8">
+<div class="step-h"><div class="num">8</div>
+  <div><h2>Дописать четыре вещи</h2><div class="dur">15 минут · главный шаг</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>файл с шапкой из шага 7</li>
+    <li>текст вашего промпта</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>готовый <code>SKILL.md</code></li></ul></div>
+</div>
+
+<p>Скопируйте свой промпт в тело файла — и превратите его в инструкцию.
+Промпт отличается от скилла ровно четырьмя добавками. Пройдите по ним
+по порядку.</p>
+
+<h3>1. Проверка входов — что должно быть до начала</h3>
+
+<p>Что скиллу нужно, чтобы вообще начать: какой файл, какие данные, что
+вы должны приложить. И что делать, если этого нет.</p>
+
+<div class="codewrap"><pre>## Шаг 0. Проверь входы
+
+Тебе нужна выгрузка CSV с колонками: дата, менеджер, сумма.
+Если файл не приложен или колонок не хватает — остановись и скажи,
+чего не хватает. Не выдумывай данные и не считай по неполным.</pre></div>
+
+<p>Без этого пункта модель начинает работать с тем, что есть, и выдаёт
+правдоподобный результат на неполных данных. Это худший вид ошибки: он
+не выглядит ошибкой.</p>
+
+<h3>2. Причина у каждого правила</h3>
+
+<p>Самая недооценённая добавка. Правило с объяснённым последствием
+соблюдается заметно точнее, чем такое же правило без объяснения.</p>
+
+<div class="badpair">
+  <div class="bad"><div class="lbl">Промпт</div>
+    «Пиши коротко, до 1000 знаков.»</div>
+  <div class="good"><div class="lbl">Скилл</div>
+    «До 1000 знаков. Это не пожелание по стилю: сводку читают с телефона
+    в понедельник утром, и всё, что ниже первого экрана, не читают вовсе.»</div>
+</div>
+
+<p>Пройдитесь по всем своим требованиям и к каждому допишите «потому что».
+Если причину сформулировать не выходит — возможно, правило лишнее.</p>
+
+<h3>3. Пограничные случаи</h3>
+
+<p>Вспомните, когда результат вас не устроил, и опишите, что делать в таких
+ситуациях. Это то, что вы обычно дописываете в переписке уже после первого
+ответа.</p>
+
+<div class="codewrap"><pre>## Особые случаи
+
+- Данных меньше чем за 5 дней — скажи об этом и не сравнивай с прошлой
+  неделей: сравнение будет бессмысленным.
+- У менеджера ноль продаж — включи его в таблицу с нулём, не пропускай.
+  Пропущенная строка читается как ошибка выгрузки.
+- Отклонение больше 50% — сначала проверь, нет ли дубля в выгрузке.</pre></div>
+
+<h3>4. Критерий готовности</h3>
+
+<p>По какому признаку работа закончена. Без этого модель останавливается
+раньше, чем нужно, и считает задачу решённой.</p>
+
+<div class="codewrap"><pre>## Что считается сделанным
+
+- Посчитаны все менеджеры из выгрузки, включая нулевые.
+- Каждое отклонение больше 15% объяснено одной строкой.
+- Текст укладывается в 1000 знаков.
+- В конце — один вывод, а не пересказ таблицы.</pre></div>
+
+<div class="box ok">
+  <span class="bt">Ориентир по объёму</span>
+  <p>Нормальный первый скилл — это полторы-две страницы текста. Если получилось
+  пять строк, вы просто переписали промпт. Если получилось десять страниц,
+  скорее всего внутри две разные задачи, и их стоит развести по двум скиллам.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s9">
+<div class="step-h"><div class="num">9</div>
+  <div><h2>Проверить, что скилл срабатывает</h2><div class="dur">10 минут · терминал и правки</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>готовый <code>SKILL.md</code></li>
+    <li>реальная задача, на которой можно проверить</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>скилл запускается от вашей обычной фразы</li></ul></div>
+</div>
+
+<p>Запустите Claude Code в папке, где лежит скилл, и напишите задачу
+<b>своими обычными словами</b> — не именем скилла и не путём к файлу:</p>
+
+<div class="codewrap"><pre>claude</pre></div>
+
+<p>А дальше, например:</p>
+
+<div class="codewrap"><pre>Посчитай сводку за неделю, выгрузка в файле sales.csv</pre></div>
+
+<p>Проверяем две разные вещи, и путать их не стоит.</p>
+
+<table>
+  <tr><th style="width:30%">Что проверяем</th><th>Что смотрим</th></tr>
+  <tr><td><b>Скилл запустился?</b></td>
+      <td>В начале ответа видно, что подхватился нужный скилл. Если нет —
+      проблема в <code>description</code>, тело файла тут ни при чём.</td></tr>
+  <tr><td><b>Результат хороший?</b></td>
+      <td>Если запустился, но сделал не то — проблема в теле скилла.
+      Описание менять не нужно.</td></tr>
+</table>
+
+<h3>Не запустился</h3>
+
+<p>Вернитесь к <code>description</code> и добавьте в триггеры ту самую фразу,
+которую вы только что написали. Это не костыль, а нормальный способ настройки:
+вы буквально показываете, какими словами эту задачу просят.</p>
+
+<h3>Запустился, но сделал не то</h3>
+
+<p>Найдите в теле пункт, который не сработал, и допишите к нему причину
+или пограничный случай. Меняйте по одному месту за раз, иначе не поймёте,
+что именно помогло.</p>
+
+<div class="box tip">
+  <span class="bt">Самый быстрый способ отладки</span>
+  <p>Спросите у самой модели: «Ты только что выполнил задачу не так,
+  как написано в скилле. Прочитай <code>SKILL.md</code> ещё раз и скажи,
+  какая формулировка сбила с толку». Она разбирает такие вещи точнее,
+  чем кажется, — и указывает на двусмысленности, которых вы не видите.</p>
+</div>
+
+<p>Прогоните скилл минимум на трёх разных задачах. Первый запуск почти всегда
+удачный по случайности; проблемы вылезают на втором и третьем.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s10">
+<div class="step-h"><div class="num">10</div>
+  <div><h2>Выложить скилл к себе</h2><div class="dur">5 минут · браузер</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>репозиторий из шага 3</li>
+    <li>работающий скилл</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>скилл лежит в репозитории</li>
+    <li>ссылка готова к сдаче</li></ul></div>
+</div>
+
+<p>Откройте свой <code>ai-school-homework</code> и загрузите файл так, как
+тренировались в шаге 4: <b>Add file</b> → <b>Upload files</b>.</p>
+
+<p>Чтобы файл лёг в папку, перетащите папку целиком — или создайте файл
+через <b>Add file</b> → <b>Create new file</b> и впишите в имя путь:</p>
+
+<div class="codewrap"><pre>skills/weekly-report/SKILL.md</pre></div>
+
+<p>В <b>Commit message</b> напишите по-человечески: «Добавила скилл
+для еженедельной сводки».</p>
+
+<div class="box warn">
+  <span class="bt">Перечитайте файл перед загрузкой</span>
+  <p>В скилле легко остаются рабочие подробности: имена клиентов, внутренние
+  цифры, куски реальной переписки. Если репозиторий публичный, всё это
+  увидят все. Замените конкретику на условные примеры — на качестве скилла
+  это не скажется.</p>
+</div>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2 id="submit">Что сдать</h2>
+
+<p>Четыре пункта. Первые два — доказательство, что механика освоена.
+Третий и четвёртый — собственно домашняя работа.</p>
+
+<ul class="check">
+  <li><div class="bx"></div><div class="txt"><b>Ссылка на ваш репозиторий</b>
+    <code>ai-school-homework</code>. Если он приватный — добавьте
+    преподавателя в Settings → Collaborators.</div></li>
+  <li><div class="bx"></div><div class="txt"><b>Ваш <code>SKILL.md</code></b>
+    в этом репозитории.</div></li>
+  <li><div class="bx"></div><div class="txt"><b>Скриншот работающего скилла</b>
+    — видно вашу фразу и что скилл подхватился.</div></li>
+  <li><div class="bx"></div><div class="txt"><b>5–7 предложений разбора:</b>
+    какую фразу вы написали в первый раз, сработал ли скилл, что именно
+    вы поменяли в файле после первого прогона и что изменилось после.</div></li>
+</ul>
+
+<h3>Вопросы для самопроверки</h3>
+
+<p>Ответьте себе, прежде чем сдавать.</p>
+
+<ol>
+  <li>Чем <code>description</code> отличается по назначению от тела скилла?
+    Что чините, если скилл вообще не запустился?</li>
+  <li>Почему нельзя положить в репозиторий файл <code>.env</code>?</li>
+  <li>Вы написали в скилле «пиши коротко». Как переформулировать, чтобы
+    это соблюдалось точнее, и почему это работает?</li>
+  <li>Что произойдёт, если в скилле не будет раздела «что считается сделанным»?</li>
+  <li>Ваш скилл сработал на первой задаче и не сработал на второй.
+    Где искать причину?</li>
+  <li>Чем Fork отличается от Download ZIP? В каком случае нужен первый?</li>
+</ol>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2 id="errors">Если что-то сломалось</h2>
+
+<table>
+  <tr><th style="width:38%">Что видите</th><th>Что делать</th></tr>
+  <tr><td>Не нашли папку <code>.claude</code> в распакованном архиве</td>
+      <td>Она скрыта, потому что имя начинается с точки. В Finder нажмите
+      <b>Cmd + Shift + точка</b>.</td></tr>
+  <tr><td>На GitHub нет кнопки «создать папку»</td>
+      <td>Её и не бывает. Папка создаётся вместе с файлом: впишите путь
+      в имя файла через косую черту.</td></tr>
+  <tr><td>Repository name подсветился красным</td>
+      <td>Имя занято или в нём недопустимые символы. Пишите латиницей,
+      без пробелов, через дефис.</td></tr>
+  <tr><td>GitHub заблокировал загрузку файла</td>
+      <td>Сработала защита от секретов: в файле что-то похожее на токен.
+      Уберите секрет и загрузите снова.</td></tr>
+  <tr><td>Скилл не запускается ни от какой фразы</td>
+      <td>Проверьте шапку: три дефиса сверху и снизу, поле <code>name</code>
+      совпадает с именем папки, файл называется ровно <code>SKILL.md</code>.</td></tr>
+  <tr><td>Запускается не тот скилл</td>
+      <td>Описания двух скиллов слишком похожи. Добавьте в оба конкретики:
+      с какими файлами работают и что отдают на выходе.</td></tr>
+  <tr><td>Скилл запускается, но игнорирует часть правил</td>
+      <td>Скорее всего, правила даны без причин. Допишите к каждому
+      последствие его нарушения.</td></tr>
+  <tr><td>Забыли пароль от GitHub</td>
+      <td>На странице входа — <b>Forgot password</b>. Если потеряли доступ
+      и ко второму фактору, восстановление занимает несколько дней,
+      поэтому сохраните резервные коды сразу.</td></tr>
+</table>
+
+<div class="box tip">
+  <span class="bt">Универсальный приём</span>
+  <p>Скопируйте текст ошибки целиком и покажите его самой модели в окне
+  <code>claude</code>: «вот такая ошибка, что не так?». В девяти случаях
+  из десяти она объяснит причину быстрее, чем поиск в интернете.</p>
+</div>
+
+<hr>
+
+<p style="color:var(--muted);font-size:15.5px">Застряли дольше, чем на 15 минут,
+на одном шаге — не мучайтесь в одиночку. Напишите в чат группы, приложив
+скриншот целиком: чужая ошибка почти всегда чья-то уже пройденная.</p>
+
+</div>
+
+<div class="prog"><b id="done">0</b> / <span id="total">0</span> отмечено</div>
+
+<script>
+
+// чеклисты — состояние живёт только в памяти страницы
+const items = document.querySelectorAll('.check li');
+document.getElementById('total').textContent = items.length;
+items.forEach(li => li.addEventListener('click', () => {
+  li.classList.toggle('on');
+  document.getElementById('done').textContent =
+    document.querySelectorAll('.check li.on').length;
+}));
+
+// кнопки «копировать» у блоков кода
+document.querySelectorAll('.codewrap').forEach(w => {
+  const btn = document.createElement('button');
+  btn.className = 'copy';
+  btn.textContent = 'копировать';
+  btn.addEventListener('click', () => {
+    const text = w.querySelector('pre').innerText
+      .split('\n').map(l => l.replace(/\s*#.*$/, '').trimEnd())
+      .filter(Boolean).join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'скопировано';
+      btn.classList.add('done');
+      setTimeout(() => { btn.textContent = 'копировать'; btn.classList.remove('done'); }, 1600);
+    });
+  });
+  w.appendChild(btn);
+});
+
+</script>
+</body>
+</html>
