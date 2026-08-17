@@ -1,0 +1,1018 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Полное описание: от установки до опубликованного поста</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#FAFAFC; --card:#FFFFFF; --ink:#13161D; --muted:#5B6575;
+  --line:#E6E9EF; --accent:#B4770B; --accent-soft:#FFF7E6;
+  --ok:#1F7A4D; --ok-soft:#F0F8F3; --warn:#B3261E; --warn-soft:#FEF3F2;
+  --code:#15171E; --max:900px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Inter',-apple-system,'Segoe UI',sans-serif;
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+  padding:0 20px 100px;
+}
+.wrap{max-width:var(--max);margin:0 auto}
+
+/* ── Шапка ─────────────────────────────────────────────────────────── */
+header{padding:64px 0 40px;border-bottom:1px solid var(--line);margin-bottom:40px}
+.tagline{font-size:14px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);font-weight:600;margin-bottom:16px}
+h1{font-size:42px;line-height:1.12;letter-spacing:-.03em;font-weight:700;
+  margin-bottom:18px;text-wrap:balance}
+.lead{font-size:19px;color:var(--muted);max-width:660px;text-wrap:pretty}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:9px 14px;font-size:14.5px;color:var(--muted)}
+.fact b{color:var(--ink);font-weight:600}
+
+/* ── Типографика ───────────────────────────────────────────────────── */
+h2{font-size:30px;line-height:1.2;letter-spacing:-.025em;font-weight:700;
+  margin:56px 0 18px;text-wrap:balance;scroll-margin-top:20px}
+h3{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:32px 0 12px}
+p{margin-bottom:14px;text-wrap:pretty}
+a{color:var(--accent);text-underline-offset:3px}
+ul,ol{margin:0 0 16px 22px}
+li{margin-bottom:8px}
+strong{font-weight:600}
+code{font-family:'JetBrains Mono',monospace;font-size:.87em;
+  background:#EEF0F5;padding:2px 6px;border-radius:5px}
+hr{border:none;border-top:1px solid var(--line);margin:44px 0}
+
+/* ── Шаги ──────────────────────────────────────────────────────────── */
+.step{margin:52px 0 0}
+.step-h{display:flex;gap:16px;align-items:flex-start;margin-bottom:6px}
+.num{flex:none;width:42px;height:42px;border-radius:12px;background:var(--ink);
+  color:#fff;display:grid;place-items:center;font-weight:700;font-size:18px;margin-top:2px}
+.step-h h2{margin:0;font-size:27px}
+.dur{font-size:14px;color:var(--muted);margin-top:4px}
+
+/* ── Вход / выход ──────────────────────────────────────────────────── */
+.io{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0 22px}
+.io > div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.io .ttl{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:600;color:var(--muted);margin-bottom:8px}
+.io .in-t{color:var(--accent)}
+.io .out-t{color:var(--ok)}
+.io p{font-size:15.5px;margin:0;color:var(--ink)}
+.io ul{margin:0 0 0 18px;font-size:15.5px}
+.io li{margin-bottom:4px}
+
+/* ── Код ───────────────────────────────────────────────────────────── */
+.codewrap{position:relative;margin:18px 0 22px}
+pre{background:var(--code);color:#DCE0E8;border-radius:12px;padding:18px 20px;
+  overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.7}
+pre .c{color:#7B8395}
+.copy{position:absolute;top:10px;right:10px;background:#2C2F39;color:#C9CFDA;
+  border:none;border-radius:8px;padding:6px 12px;font-size:12.5px;cursor:pointer;
+  font-family:'Inter',sans-serif;opacity:.85}
+.copy:hover{opacity:1;background:#3A3E4A}
+.copy.done{background:#1F7A4D;color:#fff}
+
+/* ── Картинки ──────────────────────────────────────────────────────── */
+figure{margin:22px 0 26px}
+figure img{width:100%;display:block;border-radius:12px;border:1px solid var(--line)}
+figcaption{font-size:14px;color:var(--muted);margin-top:9px;padding-left:2px}
+
+/* ── Плашки ────────────────────────────────────────────────────────── */
+.box{border-radius:12px;padding:16px 20px;margin:20px 0;font-size:16px}
+.tip{background:var(--accent-soft);border:1px solid #F0DFB8}
+.warn{background:var(--warn-soft);border:1px solid #F5D2CE}
+.ok{background:var(--ok-soft);border:1px solid #CFE7DA}
+.box .bt{font-weight:600;margin-bottom:5px;display:block}
+.box p:last-child{margin-bottom:0}
+
+/* ── Чеклист ───────────────────────────────────────────────────────── */
+.check{list-style:none;margin:18px 0 22px}
+.check li{display:flex;gap:12px;align-items:flex-start;background:var(--card);
+  border:1px solid var(--line);border-radius:10px;padding:12px 15px;margin-bottom:8px;
+  cursor:pointer;transition:.15s;font-size:16px}
+.check li:hover{border-color:#D3D8E2}
+.check li.on{background:var(--ok-soft);border-color:#CFE7DA}
+.check li.on .txt{color:var(--muted);text-decoration:line-through}
+.bx{flex:none;width:22px;height:22px;border-radius:6px;border:2px solid #C6CCD8;
+  margin-top:1px;display:grid;place-items:center;font-size:14px;color:#fff}
+.check li.on .bx{background:var(--ok);border-color:var(--ok)}
+.check li.on .bx::after{content:'✓'}
+
+/* ── Таблицы ───────────────────────────────────────────────────────── */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15.5px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th{text-align:left;padding:12px 16px;background:#F4F6FA;font-weight:600;font-size:14px;
+  border-bottom:1px solid var(--line)}
+td{padding:12px 16px;border-bottom:1px solid #F0F2F6;vertical-align:top}
+tr:last-child td{border-bottom:none}
+
+/* ── Схема ─────────────────────────────────────────────────────────── */
+.scheme{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:24px 0}
+.sc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.sc .h{font-weight:600;font-size:17px;margin-bottom:4px;display:flex;gap:9px;align-items:center}
+.sc .h span{font-size:12px;background:var(--accent-soft);color:var(--accent);
+  padding:3px 8px;border-radius:20px;font-weight:600;letter-spacing:.04em}
+.sc p{font-size:15px;color:var(--muted);margin:0}
+.sc .files{margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--ink)}
+
+/* ── Оглавление ────────────────────────────────────────────────────── */
+.toc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 24px}
+.toc .t{font-weight:600;margin-bottom:10px}
+.toc ol{margin:0 0 0 20px;font-size:16px}
+.toc li{margin-bottom:5px}
+.toc a{color:var(--ink);text-decoration:none}
+.toc a:hover{color:var(--accent)}
+
+/* ── Прогресс ──────────────────────────────────────────────────────── */
+.prog{position:fixed;right:22px;bottom:22px;background:var(--ink);color:#fff;
+  padding:10px 16px;border-radius:100px;font-size:14px;font-weight:500;
+  box-shadow:0 6px 22px rgba(15,20,35,.24);z-index:10}
+.prog b{color:#FFD230}
+
+.badpair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.badpair > div{border-radius:12px;padding:15px 18px;font-size:15.5px}
+.bad{background:var(--warn-soft);border:1px solid #F5D2CE}
+.good{background:var(--ok-soft);border:1px solid #CFE7DA}
+.badpair .lbl{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;
+  font-weight:600;margin-bottom:6px}
+.bad .lbl{color:var(--warn)} .good .lbl{color:var(--ok)}
+
+@media (max-width:720px){
+  body{font-size:16px;padding:0 16px 80px}
+  h1{font-size:31px} h2{font-size:24px} .step-h h2{font-size:22px}
+  .io,.scheme,.badpair{grid-template-columns:1fr}
+  .num{width:36px;height:36px;font-size:16px}
+  .prog{right:12px;bottom:12px}
+}
+@media print{
+  .prog,.copy{display:none}
+  body{background:#fff}
+  .step{break-inside:avoid}
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="tagline">Полное описание · от нуля до публикации</div>
+  <h1>Весь путь: от пустого компьютера до поста в канале</h1>
+  <p class="lead">Один документ, где подряд описано всё: что установить, как завести
+  бота, какие файлы принести, как агент собирает пост и что происходит в момент
+  публикации. На каждом шаге указано, какой файл появляется и какой скилл
+  за это отвечает — чтобы вы знали, куда смотреть, когда что-то пойдёт не так.</p>
+  <div class="facts">
+    <div class="fact">Первая настройка: <b>~90 минут</b></div>
+    <div class="fact">Каждый следующий пост: <b>~10 минут</b></div>
+    <div class="fact">Система: <b>macOS или Linux</b></div>
+    <div class="fact">Опыт программирования: <b>не нужен</b></div>
+  </div>
+</header>
+
+<div class="toc">
+  <div class="t">Содержание</div>
+  <ol>
+    <li><a href="#map">Карта: что из чего состоит</a></li>
+    <li><a href="#s1">Шаг 1. Поставить окружение</a></li>
+    <li><a href="#s2">Шаг 2. Создать бота</a></li>
+    <li><a href="#s3">Шаг 3. Узнать свой chat_id</a></li>
+    <li><a href="#s4">Шаг 4. Подключить канал</a></li>
+    <li><a href="#s5">Шаг 5. Заполнить .env</a></li>
+    <li><a href="#s6">Шаг 6. Три проверки до запуска</a></li>
+    <li><a href="#s7">Шаг 7. Принести четыре входа</a></li>
+    <li><a href="#s8">Шаг 8. Собрать бренд-профиль</a></li>
+    <li><a href="#run">Прогон: как рождается один пост</a></li>
+    <li><a href="#s9">Шаг 9. Идея</a></li>
+    <li><a href="#s10">Шаг 10. Текст</a></li>
+    <li><a href="#s11">Шаг 11. Фотография</a></li>
+    <li><a href="#s12">Шаг 12. Обложка</a></li>
+    <li><a href="#s13">Шаг 13. Публикация и память</a></li>
+    <li><a href="#files">Что где лежит: полный список</a></li>
+    <li><a href="#errors">Если что-то сломалось</a></li>
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2 id="map">Карта: что из чего состоит</h2>
+
+<p>Прежде чем ставить — стоит понять устройство. Агент это не «программа
+с искусственным интеллектом внутри», а четыре разные вещи, собранные вместе.
+Когда он поведёт себя не так, вы должны знать, <b>какой файл открывать</b>.</p>
+
+<div class="scheme">
+  <div class="sc">
+    <div class="h">Инструкции <span>ЧТО ДЕЛАТЬ</span></div>
+    <p>Обычные текстовые файлы. Роль, правила, критерии, формат ответа.
+    Меняете текст — меняется поведение, без единой строки кода.</p>
+    <div class="files">CLAUDE.md · .claude/skills/ · brand/</div>
+  </div>
+  <div class="sc">
+    <div class="h">Инструменты <span>ЧЕМ ДЕЛАТЬ</span></div>
+    <p>Функции, которыми агент действует во внешнем мире: спросить вас,
+    собрать картинку, опубликовать пост, поискать в интернете.</p>
+    <div class="files">scripts/*.py · WebSearch · Read/Write</div>
+  </div>
+  <div class="sc">
+    <div class="h">Память <span>ЧТО БЫЛО</span></div>
+    <p>Файл с историей тем и фотографий. Без него агент каждый день
+    предлагает одно и то же — он не помнит вчерашний запуск.</p>
+    <div class="files">state/ideas-history.jsonl</div>
+  </div>
+  <div class="sc">
+    <div class="h">Триггер <span>КОГДА ДЕЛАТЬ</span></div>
+    <p>То, что начинает работу. Здесь триггер — вы: агент ждёт, пока
+    вы откроете терминал и напишете фразу.</p>
+    <div class="files">вы · claude · фраза-запрос</div>
+  </div>
+</div>
+
+<p>Плюс пятая деталь, которой в схеме не видно, но без неё всё разваливается:
+<b>человек в четырёх точках</b>. Агент останавливается и ждёт вашего ответа
+перед выбором темы, перед отправкой текста в оформление, при выборе фото
+и перед самой публикацией. Контроль стоит там, где ошибка дорогая.</p>
+
+<div class="box tip">
+  <span class="bt">Важная мысль, ради которой всё собрано именно так</span>
+  <p>Текст пишет модель, а обложку собирает обычный HTML-шаблон, с которого
+  снимается скриншот: берётся ваша фотография, поверх ложится свёрстанная
+  плашка с заголовком. Картинки <b>не генерируются нейросетью</b>. Поэтому
+  обложки всегда одинаково аккуратные, шрифты не «пляшут», а поправить
+  отступ — это правка одной строки CSS, а не двадцать попыток с промптом.</p>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s1">
+<div class="step-h"><div class="num">1</div>
+  <div><h2>Поставить окружение</h2><div class="dur">15 минут · терминал</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>архив <code>tg-post-agent.zip</code> или клон репозитория</li>
+    <li>интернет</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>папка <code>~/tg-post-agent</code> с установленными зависимостями</li>
+    <li>команда <code>claude</code> работает в терминале</li></ul></div>
+</div>
+
+<p>Сначала проверьте, что нужные программы уже стоят:</p>
+
+<div class="codewrap"><pre>python3 -V
+node -v</pre></div>
+
+<p>Должны появиться номера версий: Python не ниже 3.10, Node не ниже 18.
+Если пишет <code>command not found</code> — поставьте недостающее
+с <a href="https://python.org">python.org</a> и <a href="https://nodejs.org">nodejs.org</a>,
+затем закройте и откройте терминал заново.</p>
+
+<p>Теперь распакуйте проект и поставьте зависимости:</p>
+
+<div class="codewrap"><pre>cd ~/Downloads
+unzip tg-post-agent.zip -d ~
+cd ~/tg-post-agent
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+playwright install chromium</pre></div>
+
+<p>Что именно ставится и зачем:</p>
+
+<table>
+  <tr><th style="width:32%">Пакет</th><th>Зачем нужен</th></tr>
+  <tr><td><code>python-telegram-bot</code></td>
+      <td>Всё общение с Telegram: спросить вас, прислать фото, опубликовать пост.
+      Прячет детали протокола и отдаёт понятные ошибки.</td></tr>
+  <tr><td><code>python-dotenv</code></td>
+      <td>Читает ваши токены из файла <code>.env</code>, чтобы они не лежали
+      в коде.</td></tr>
+  <tr><td><code>playwright</code> + chromium</td>
+      <td>Браузер, которым снимается скриншот обложки. Команда
+      <code>playwright install</code> качает сам браузер — это займёт
+      минуту-две.</td></tr>
+</table>
+
+<p>И поставьте Claude Code:</p>
+
+<div class="codewrap"><pre>npm install -g @anthropic-ai/claude-code
+claude</pre></div>
+
+<p>Первый запуск попросит войти в аккаунт. Достаточно подписки Pro или Max —
+<b>ключ Anthropic API не нужен</b>, агент работает внутри вашей сессии.
+После входа наберите <code>/exit</code>, вернёмся к нему в шаге 8.</p>
+
+<div class="box warn">
+  <span class="bt">Запомните про <code>(.venv)</code></span>
+  <p>После команды <code>source .venv/bin/activate</code> строка в терминале
+  начинается с <code>(.venv)</code>. Если вы закрыли окно и открыли новое —
+  этой пометки нет, и команды <code>python3 scripts/...</code> упадут
+  с ошибкой про отсутствующие модули.</p>
+  <p>Лечится повторным заходом:
+  <code>cd ~/tg-post-agent && source .venv/bin/activate</code></p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s2">
+<div class="step-h"><div class="num">2</div>
+  <div><h2>Создать бота</h2><div class="dur">5 минут · Telegram</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>Telegram</li>
+    <li>название для бота</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>токен вида <code>8123456789:AAH...</code></li></ul></div>
+</div>
+
+<p>Бот — это «руки» агента в Telegram: через него он задаёт вам вопросы,
+присылает фотографии на выбор и публикует посты. Создаётся он в чате
+со специальным ботом <b>@BotFather</b>.</p>
+
+<p>Откройте его, нажмите Start и отправьте команду <code>/newbot</code>.
+Дальше он спросит название (любое, по-русски можно) и username — тот обязан
+заканчиваться на <code>bot</code> и быть свободным.</p>
+
+<p>Последнее сообщение содержит токен.</p>
+
+<div class="box warn">
+  <span class="bt">Токен — это пароль от бота</span>
+  <p>Любой, кто его увидит, сможет писать в ваш канал. Не выкладывайте
+  в чат группы и не публикуйте на GitHub. Если случайно опубликовали —
+  идите к @BotFather, команда <code>/revoke</code>, и вставьте новый токен
+  в <code>.env</code>.</p>
+</div>
+
+<p>Сразу же отключите режим приватности, иначе бот не будет видеть часть
+ваших ответов. В том же чате: <code>/setprivacy</code> → выберите своего
+бота → <b>Disable</b>.</p>
+
+<div class="box warn">
+  <span class="bt">Нужный ответ — DISABLED</span>
+  <p>Если оставить ENABLED, согласование будет работать через раз,
+  и вы потратите час на поиск причины.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s3">
+<div class="step-h"><div class="num">3</div>
+  <div><h2>Узнать свой chat_id</h2><div class="dur">3 минуты · терминал</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>токен из шага 2</li>
+    <li>вы написали своему боту хотя бы одно сообщение</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>число вида <code>573920184</code> — ваш личный id</li></ul></div>
+</div>
+
+<p>Агент должен знать, кому писать. У каждого чата в Telegram есть числовой
+идентификатор — его и надо выяснить.</p>
+
+<p>Сначала найдите своего бота по username, нажмите Start и напишите ему
+любое слово. Затем в терминале:</p>
+
+<div class="codewrap"><pre>cd ~/tg-post-agent
+cp .env.example .env
+open -e .env</pre></div>
+
+<p>Впишите в строку <code>TELEGRAM_BOT_TOKEN=</code> токен из шага 2,
+сохраните файл (Cmd+S) и запустите:</p>
+
+<div class="codewrap"><pre>python3 scripts/tg_whoami.py</pre></div>
+
+<p>Скрипт напечатает список чатов: для каждого <code>chat_id</code>, тип
+и имя. Строка с типом <code>private</code> и вашим именем — это вы.
+Число понадобится в шаге 5.</p>
+
+<div class="box tip">
+  <span class="bt">Пусто?</span>
+  <p>«Обновлений нет» означает одно из двух: вы не написали боту, либо токен
+  скопирован с лишним пробелом. Проверьте и запустите снова.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s4">
+<div class="step-h"><div class="num">4</div>
+  <div><h2>Подключить канал</h2><div class="dur">5 минут · Telegram</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>канал в Telegram — создайте тестовый, если жалко рабочий</li>
+    <li>username вашего бота</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>бот — администратор канала с правом публикации</li>
+    <li>адрес канала вида <code>@my_ai_channel</code></li></ul></div>
+</div>
+
+<p>В Telegram: откройте канал → Управление каналом → Администраторы →
+Добавить администратора → найдите своего бота по username → добавьте.</p>
+
+<p>В списке прав обязательно должна быть включена <b>«Публикация сообщений»</b>.
+Остальные можно выключить — агенту они не нужны.</p>
+
+<div class="box tip">
+  <span class="bt">Минимально необходимый набор прав</span>
+  <p>Чем меньше прав, тем спокойнее — это общее правило для любых интеграций.
+  Публиковать посты бот сможет, а удалить канал или разослать приглашения — нет.</p>
+</div>
+
+<p>Запишите адрес канала. У публичного канала это <code>@имя</code> из его
+профиля. У приватного username нет: перешлите любой пост из канала своему
+боту и снова запустите <code>python3 scripts/tg_whoami.py</code> — увидите
+число вида <code>-1002233445566</code>.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s5">
+<div class="step-h"><div class="num">5</div>
+  <div><h2>Заполнить .env</h2><div class="dur">3 минуты · редактор</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>токен (шаг 2), chat_id (шаг 3), адрес канала (шаг 4)</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>заполненный <code>.env</code> — все ключи в одном месте</li></ul></div>
+</div>
+
+<p><code>.env</code> — это файл с секретами. Он намеренно не попадает
+в архивы и репозитории: в него складывают то, что нельзя показывать никому.</p>
+
+<div class="codewrap"><pre>TELEGRAM_BOT_TOKEN=8123456789:AAH...
+TELEGRAM_CHAT_ID=573920184
+TELEGRAM_CHANNEL_ID=@my_ai_channel
+BRAND_HANDLE=@my_ai_channel</pre></div>
+
+<table>
+  <tr><th style="width:34%">Поле</th><th>Что это</th></tr>
+  <tr><td><code>TELEGRAM_BOT_TOKEN</code></td>
+      <td>Пароль от бота из шага 2.</td></tr>
+  <tr><td><code>TELEGRAM_CHAT_ID</code></td>
+      <td>Куда агент пишет <b>вам</b> — ваш личный чат с ботом.</td></tr>
+  <tr><td><code>TELEGRAM_CHANNEL_ID</code></td>
+      <td>Куда уходит <b>пост</b> — канал. Легко перепутать с предыдущим полем:
+      если перепутать, посты будут приходить вам в личку.</td></tr>
+  <tr><td><code>BRAND_HANDLE</code></td>
+      <td>Подпись, которая печатается в углу обложки.</td></tr>
+</table>
+
+<p>Кавычки не нужны, пробелы вокруг знака «=» не нужны.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s6">
+<div class="step-h"><div class="num">6</div>
+  <div><h2>Три проверки до запуска</h2><div class="dur">10 минут · терминал</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>заполненный <code>.env</code></li>
+    <li>активированное окружение <code>(.venv)</code></li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>уверенность, что рендер, диалог и публикация работают</li>
+    <li>тестовый пост в канале — потом удалите</li></ul></div>
+</div>
+
+<p>Это самый недооценённый шаг. Проверьте инструменты <b>до</b> того, как
+подключать агента: если что-то сломается позже, вы будете точно знать,
+что дело в инструкциях, а не в токенах.</p>
+
+<h3>Проверка 1. Обложка собирается</h3>
+
+<div class="codewrap"><pre>python3 scripts/render_cover.py input/photos/example.jpg \
+  --title "Пробный заголовок в две строки" --kicker "Разбор" \
+  --out output/example/cover.png
+open output/example/cover.png</pre></div>
+
+<p>Должна открыться картинка 1080×1080: фотография, поверх неё внизу тёмная
+плашка с заголовком и жёлтой полоской. Текст не обрезан, за края не вылезает.</p>
+
+<h3>Проверка 2. Бот вас слышит</h3>
+
+<div class="codewrap"><pre>python3 scripts/tg_ask.py "Тест. Ответьте любым словом."</pre></div>
+
+<p>Скрипт «зависнет» — это правильное поведение. Он ждёт вашего ответа
+в Telegram. Ответьте боту — и ваш текст напечатается в терминале.</p>
+
+<h3>Проверка 3. Публикация</h3>
+
+<p>Для неё нужны два файла в папке. Создайте их вручную:</p>
+
+<div class="codewrap"><pre>echo "&lt;b&gt;Тест&lt;/b&gt; публикации" > output/example/post.html
+python3 scripts/publish_telegram.py output/example</pre></div>
+
+<p>В канале появится пост: картинка и текст под ней. Удалите его руками —
+это был тест.</p>
+
+<div class="box ok">
+  <span class="bt">Все три прошли?</span>
+  <p>Значит, техническая часть позади. Дальше начинается то, ради чего
+  всё и затевалось.</p>
+</div>
+</div>
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s7">
+<div class="step-h"><div class="num">7</div>
+  <div><h2>Принести четыре входа</h2><div class="dur">30 минут · главный шаг</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>ответ на вопрос «о чём мой канал и для кого»</li>
+    <li>2–5 своих текстов целиком</li>
+    <li>3–8 примеров оформления, которое нравится</li>
+    <li>10–30 своих фотографий</li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li>заполненная папка <code>input/</code></li></ul></div>
+</div>
+
+<p>Всё, что вы делали до этого, у всех одинаковое. Отсюда начинается ваш агент.
+Качество постов на 80% определяется этими четырьмя входами — не моделью
+и не промптами.</p>
+
+<p>Важно: вы <b>не заполняете</b> <code>brand/concept.md</code>
+и <code>brand/voice.md</code> руками. Вы приносите сырьё, а агент собирает
+из него рабочие файлы сам, на следующем шаге. Ваша работа — качество сырья.</p>
+
+<h3>Вход 1. <code>input/about.md</code> — о себе или о продукте</h3>
+
+<p>Правило простое: если описание подходит десяти другим каналам, агент будет
+писать безлико. Конкретика на входе превращается в конкретику в постах.</p>
+
+<div class="badpair">
+  <div class="bad"><div class="lbl">Так не надо</div>
+    «Канал про AI и технологии для всех, кому интересны современные инструменты
+    и будущее индустрии.»</div>
+  <div class="good"><div class="lbl">Так работает</div>
+    «Как команде из 5–20 человек внедрить AI так, чтобы это экономило часы,
+    а не создавало новые задачи.»</div>
+</div>
+
+<div class="badpair">
+  <div class="bad"><div class="lbl">Аудитория: так не надо</div>
+    «Предприниматели, специалисты и все, кто хочет развиваться.»</div>
+  <div class="good"><div class="lbl">Аудитория: так работает</div>
+    «Руководители отделов 30–45 лет. Болит: инструментов много, непонятно
+    с чего начать; внедрили ChatGPT — и ничего не изменилось; страшно
+    предлагать руководству то, за что потом отвечать.»</div>
+</div>
+
+<p>Обязательный минимум: о чём канал одним предложением, кто вы, портрет
+аудитории с 3–4 болями своими словами, стоп-темы и одно целевое действие.</p>
+
+<h3>Вход 2. <code>input/my-texts.md</code> — примеры ваших текстов</h3>
+
+<p>Вставьте 2–5 своих текстов целиком: посты, письма, расшифровки выступлений.
+Берите <b>самые типичные, а не самые удачные</b>. Вылизанный до блеска текст
+даёт вылизанный до безликости голос.</p>
+
+<p>Что агент из них достанет: длину фразы, любимые обороты и — главное —
+список стоп-слов, то есть оборотов, которых у вас нет ни разу. Именно эти
+слова модель вставляет по умолчанию, и по ним читатель узнаёт машинный текст.</p>
+
+<div class="box tip">
+  <span class="bt">Меньше двух текстов не работает</span>
+  <p>По одному тексту голос не снимается: агент примет за стиль случайные
+  особенности одного конкретного поста. Три текста — рабочий минимум.</p>
+</div>
+
+<h3>Вход 3. <code>input/refs/</code> — примеры оформления</h3>
+
+<p>3–8 скриншотов оформления, которое вам нравится: чужие посты с плашками,
+обложки, афиши. По ним агент настроит цвет и прозрачность плашки, акцентный
+цвет и крупность заголовка.</p>
+
+<div class="box warn">
+  <span class="bt">Картинки из refs не попадут в ваши посты</span>
+  <p>Из них берётся только стилистика. Обложка собирается из <b>вашей</b>
+  фотографии и HTML-плашки — ни одна картинка не генерируется нейросетью
+  и не срисовывается.</p>
+  <p>Кладите однородные примеры: если стили в папке разные, агент усреднит
+  их в невнятное.</p>
+</div>
+
+<h3>Вход 4. <code>input/photos/</code> — ваши фотографии</h3>
+
+<p>То, из чего будут собираться обложки. 10–30 снимков, чем разнообразнее
+по сюжету, тем проще подобрать под конкретный пост.</p>
+
+<div class="box tip">
+  <span class="bt">Главное требование — спокойный низ кадра</span>
+  <p>Внизу ляжет плашка с заголовком. Всё, что попало под неё, видно не будет.
+  Горизонтальные и квадратные кадры предпочтительнее: вертикальные обрежутся
+  сверху и снизу.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s8">
+<div class="step-h"><div class="num">8</div>
+  <div><h2>Собрать бренд-профиль</h2><div class="dur">15 минут · Claude Code</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Что нужно на входе</div>
+    <ul><li>заполненная папка <code>input/</code></li></ul></div>
+  <div><div class="ttl out-t">Что получится на выходе</div>
+    <ul><li><code>brand/concept.md</code> и <code>brand/voice.md</code></li>
+    <li>настроенный <code>templates/cover.html</code></li>
+    <li>опись фотографий <code>input/photos/index.json</code></li></ul></div>
+</div>
+
+<p>Запустите агента:</p>
+
+<div class="codewrap"><pre>cd ~/tg-post-agent
+source .venv/bin/activate
+claude</pre></div>
+
+<p>И в открывшемся окне напишите:</p>
+
+<div class="codewrap"><pre>Настрой бренд по моим входным файлам</pre></div>
+
+<p>Сработает скилл <code>brand-setup</code>. Что он делает по порядку:</p>
+
+<table>
+  <tr><th style="width:26%">Действие</th><th>Что происходит</th></tr>
+  <tr><td>Читает входы</td>
+      <td>Если файла нет или он пустой — останавливается и говорит, чего
+      не хватает. Не выдумывает содержание за вас.</td></tr>
+  <tr><td>Собирает <code>concept.md</code></td>
+      <td>Тема канала, портрет аудитории, боли, шесть рубрик с короткими
+      именами для плашки, стоп-темы, целевое действие. Чего не хватило
+      в <code>about.md</code> — спросит у вас в Telegram.</td></tr>
+  <tr><td>Собирает <code>voice.md</code></td>
+      <td>Как вы строите фразу, ваши обороты с примерами, минимум 10 стоп-слов,
+      как вы оформляете текст, лимиты по знакам.</td></tr>
+  <tr><td>Настраивает плашку</td>
+      <td>Смотрит <code>refs/</code> и правит CSS-переменные
+      в <code>templates/cover.html</code>. Разметку не трогает.</td></tr>
+  <tr><td>Описывает фото</td>
+      <td>Открывает каждый снимок и составляет <code>index.json</code>:
+      что на нём, какое настроение, есть ли место под плашку.</td></tr>
+</table>
+
+<div class="box ok">
+  <span class="bt">Проверьте, что получилось</span>
+  <p>Откройте <code>brand/voice.md</code> и прочитайте список стоп-слов.
+  Если там обороты, которых вы и правда не используете, — хорошо. Если агент
+  выписал слова, которыми вы как раз пользуетесь, значит в <code>my-texts.md</code>
+  мало материала. Добавьте текстов и запустите скилл снова.</p>
+</div>
+
+<p>Этот шаг делается один раз. Повторяют его, когда меняется голос
+или оформление.</p>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2 id="run">Прогон: как рождается один пост</h2>
+
+<p>Настройка позади. Дальше — то, что повторяется каждый раз и занимает
+минут десять. Ваше участие: четыре коротких сообщения в Telegram.</p>
+
+<p>Запуск всегда один и тот же:</p>
+
+<div class="codewrap"><pre>cd ~/tg-post-agent
+source .venv/bin/activate
+claude</pre></div>
+
+<div class="codewrap"><pre>Найди темы для поста на сегодня</pre></div>
+
+<p>Обратите внимание: вы не называете скилл по имени и не указываете путь
+к файлу. Claude Code сам сопоставляет вашу фразу с описанием скилла
+и запускает нужный, а тот, отработав, передаёт дело дальше.</p>
+
+<div class="box tip">
+  <span class="bt">Дальше вы уходите из терминала</span>
+  <p>Всё общение переезжает в Telegram. Терминал можно свернуть, но не
+  закрывать: пока он открыт, агент работает.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s9">
+<div class="step-h"><div class="num">9</div>
+  <div><h2>Идея</h2><div class="dur">2 минуты · скилл idea-finder</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Читает</div>
+    <ul><li><code>brand/concept.md</code> — рубрики, аудитория, стоп-темы</li>
+    <li><code>state/ideas-history.jsonl</code> — что уже было</li>
+    <li>интернет через WebSearch</li></ul></div>
+  <div><div class="ttl out-t">Отдаёт</div>
+    <ul><li>четыре идеи вам в Telegram</li>
+    <li>выбранную идею — дальше по цепочке</li></ul></div>
+</div>
+
+<p>Агент ищет свежие поводы по темам ваших рубрик за последнюю неделю
+и сверяется с историей. Правило жёсткое: тема считается повтором
+<b>по сути, а не по формулировке</b> — переставленные слова не делают
+старую тему новой.</p>
+
+<p>Приходит сообщение с четырьмя идеями. У каждой три строки: заголовок,
+зачем это аудитории с привязкой к конкретной боли, и что внутри со ссылкой
+на источник.</p>
+
+<p><b>Ваш ответ:</b> номер. Но не только — «2, но зайди через провал,
+а не через успех» тоже валидный ответ, агент учтёт правку.</p>
+
+<div class="box warn">
+  <span class="bt">Про факты</span>
+  <p>Любая цифра или дата в идее должна быть из найденного источника.
+  Если факт не нашёлся со ссылкой, агент его не берёт. Выдуманная цифра
+  в опубликованном посте дороже, чем скучный пост.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s10">
+<div class="step-h"><div class="num">10</div>
+  <div><h2>Текст</h2><div class="dur">3 минуты · скилл post-writer</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Читает</div>
+    <ul><li><code>brand/voice.md</code> — голос и стоп-слова</li>
+    <li><code>brand/concept.md</code> — целевое действие</li></ul></div>
+  <div><div class="ttl out-t">Создаёт файлы</div>
+    <ul><li><code>output/&lt;дата&gt;/post.html</code></li>
+    <li><code>output/&lt;дата&gt;/meta.json</code></li></ul></div>
+</div>
+
+<p>Агент пишет пост по структуре: первая строка ради остановки скролла,
+узнавание, суть, конкретика, один выполнимый шаг, целевое действие.</p>
+
+<p>Два ограничения, которые он держит сам:</p>
+
+<table>
+  <tr><th style="width:30%">Лимит</th><th>Почему</th></tr>
+  <tr><td><b>1024 знака</b> видимого текста</td>
+      <td>Ограничение Telegram на подпись к фотографии. Длиннее — сообщение
+      просто не отправится. Теги разметки в лимит не считаются.</td></tr>
+  <tr><td>Только разрешённые теги</td>
+      <td>Telegram понимает <code>b</code>, <code>i</code>, <code>u</code>,
+      <code>s</code>, <code>a</code>, <code>code</code>, <code>pre</code>,
+      <code>blockquote</code> и спойлер. Списков <code>&lt;ul&gt;</code>
+      в Telegram нет — маркеры делаются символами в тексте.</td></tr>
+</table>
+
+<p>Заодно агент придумывает <b>title</b> для плашки на обложке (до 90 знаков)
+и <b>kicker</b> — имя рубрики (до 24 знаков).</p>
+
+<p><b>Ваш ответ:</b> «ок» или правки. Править можно сколько угодно раз,
+после каждой правки текст показывается заново. Расплывчатое «концовка слабая»
+переспрашивать не будет — перепишет с другого угла и покажет снова.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s11">
+<div class="step-h"><div class="num">11</div>
+  <div><h2>Фотография</h2><div class="dur">1 минута · скилл cover-designer</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Читает</div>
+    <ul><li><code>input/photos/index.json</code> — опись снимков</li>
+    <li><code>state/ideas-history.jsonl</code> — какие фото уже были</li></ul></div>
+  <div><div class="ttl out-t">Отдаёт</div>
+    <ul><li>2–3 снимка вам на выбор</li></ul></div>
+</div>
+
+<p>Агент подбирает кандидатов по смыслу поста, а не по порядку в папке.
+Что учитывает: фото не должно спорить с темой, внизу кадра нужно место
+под плашку, и снимок не должен повторяться с последними пятью постами.</p>
+
+<p>Кандидаты приходят альбомом, пронумерованными, с объяснением, почему
+выбраны именно они.</p>
+
+<p><b>Ваш ответ:</b> номер.</p>
+
+<div class="box tip">
+  <span class="bt">Выбирает человек</span>
+  <p>Скилл не решает за вас, даже если один вариант кажется очевидным.
+  Это дешёвая точка контроля: ошибка здесь стоит одного сообщения,
+  а неудачное фото под хорошим текстом портит весь пост.</p>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s12">
+<div class="step-h"><div class="num">12</div>
+  <div><h2>Обложка</h2><div class="dur">1 минута · render_cover.py</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Читает</div>
+    <ul><li>выбранное фото</li>
+    <li><code>meta.json</code> — title и kicker</li>
+    <li><code>templates/cover.html</code> — вёрстка плашки</li></ul></div>
+  <div><div class="ttl out-t">Создаёт файл</div>
+    <ul><li><code>output/&lt;дата&gt;/cover.png</code> — 1080×1080</li></ul></div>
+</div>
+
+<p>Здесь работает не модель, а браузер. Скрипт открывает шаблон, подставляет
+в него фотографию и текст, ждёт загрузки шрифтов и снимает скриншот:</p>
+
+<div class="codewrap"><pre>python3 scripts/render_cover.py &lt;фото&gt; \
+  --title "..." --kicker "..." --handle "@канал" \
+  --out output/&lt;дата&gt;/cover.png</pre></div>
+
+<p>Прежде чем показать вам, агент открывает картинку и смотрит на неё сам.
+Ищет обрезанный заголовок, нечитаемый текст на светлом фото, важную деталь
+снимка под плашкой, пустую плашку.</p>
+
+<p>Заголовок длиннее 90 знаков скрипт не пропустит и скажет об этом.
+Если текст в лимите, но всё равно вылезает — проблема в CSS, и чинится
+она в <code>templates/cover.html</code>, а не подгонкой заголовка под баг.</p>
+
+<p><b>Ваш ответ:</b> «ок» или что поправить.</p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="step" id="s13">
+<div class="step-h"><div class="num">13</div>
+  <div><h2>Публикация и память</h2><div class="dur">30 секунд · publish_telegram.py</div></div>
+</div>
+
+<div class="io">
+  <div><div class="ttl in-t">Читает</div>
+    <ul><li><code>output/&lt;дата&gt;/cover.png</code></li>
+    <li><code>output/&lt;дата&gt;/post.html</code></li></ul></div>
+  <div><div class="ttl out-t">Результат</div>
+    <ul><li>пост в канале</li>
+    <li>ссылка вам в Telegram</li>
+    <li>новая строка в истории</li></ul></div>
+</div>
+
+<p>После последнего «ок»:</p>
+
+<div class="codewrap"><pre>python3 scripts/publish_telegram.py output/&lt;дата&gt;</pre></div>
+
+<p>Что скрипт делает <b>до</b> отправки — три проверки, каждая с понятной
+ошибкой вместо отказа Telegram на полпути:</p>
+
+<ul>
+  <li>считает длину текста без тегов и отказывается публиковать переросший,
+  указывая, на сколько знаков сократить;</li>
+  <li>ищет теги, которых Telegram не понимает, и называет их;</li>
+  <li>проверяет, что обложка и текст на месте.</li>
+</ul>
+
+<p>Затем отправляет одним сообщением: картинка и текст под ней, разметка
+включена. В ответ печатает ссылку на опубликованный пост — агент пересылает
+её вам.</p>
+
+<h3>Последнее действие: запись в память</h3>
+
+<p>Агент дописывает в <code>state/ideas-history.jsonl</code> одну строку:</p>
+
+<div class="codewrap"><pre>{"date": "2026-08-17", "title": "заголовок", "topic": "суть в 5 словах",
+ "photo": "IMG_1.jpg", "url": "ссылка"}</pre></div>
+
+<div class="box warn">
+  <span class="bt">Шаг, который нельзя пропускать</span>
+  <p>Без этой записи завтра <code>idea-finder</code> предложит ту же тему,
+  а <code>cover-designer</code> поставит то же фото. Канал начнёт ходить
+  по кругу, и понять причину будет тем сложнее, чем позже вы заметите.</p>
+  <p>Если агент предлагает одно и то же — первым делом откройте этот файл
+  и посмотрите, растёт ли он.</p>
+</div>
+</div>
+
+<hr>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2 id="files">Что где лежит: полный список</h2>
+
+<table>
+  <tr><th style="width:36%">Путь</th><th>Что это и когда трогать</th></tr>
+  <tr><td><code>CLAUDE.md</code></td>
+      <td>Карта проекта и общие правила для всех скиллов. Читается автоматически.</td></tr>
+  <tr><td><code>.claude/skills/brand-setup/</code></td>
+      <td>Собирает бренд-профиль. Правьте, если агент плохо снимает голос.</td></tr>
+  <tr><td><code>.claude/skills/idea-finder/</code></td>
+      <td>Ищет темы. Правьте, если идеи скучные или повторяются.</td></tr>
+  <tr><td><code>.claude/skills/post-writer/</code></td>
+      <td>Пишет текст. Правьте, если тексты не в вашем голосе.</td></tr>
+  <tr><td><code>.claude/skills/cover-designer/</code></td>
+      <td>Фото, обложка, публикация. Правьте, если фото подбираются мимо.</td></tr>
+  <tr><td><code>brand/concept.md</code></td>
+      <td>Кто мы и для кого. Собирается агентом, правится руками.</td></tr>
+  <tr><td><code>brand/voice.md</code></td>
+      <td>Как мы говорим и чего не говорим. Сюда же дописывайте стоп-слова,
+      которые заметили в неудачных постах.</td></tr>
+  <tr><td><code>templates/cover.html</code></td>
+      <td>Вёрстка плашки. Меняйте только переменные в блоке <code>:root</code>.</td></tr>
+  <tr><td><code>input/</code></td>
+      <td>Ваши материалы: about, тексты, рефы, фотографии.</td></tr>
+  <tr><td><code>state/ideas-history.jsonl</code></td>
+      <td>Память. Не удаляйте: это единственное, что мешает агенту
+      повторяться.</td></tr>
+  <tr><td><code>output/&lt;дата&gt;/</code></td>
+      <td>Готовые посты. Можно чистить, на работу не влияет.</td></tr>
+  <tr><td><code>.env</code></td>
+      <td>Секреты. Никому не показывать, в репозиторий не класть.</td></tr>
+</table>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<h2 id="errors">Если что-то сломалось</h2>
+
+<table>
+  <tr><th style="width:38%">Что видите</th><th>Что делать</th></tr>
+  <tr><td><code>command not found: python3</code></td>
+      <td>Python не установлен. Поставьте с python.org, закройте и откройте терминал.</td></tr>
+  <tr><td><code>ModuleNotFoundError: No module named 'telegram'</code></td>
+      <td>Не активировано окружение.
+      <code>cd ~/tg-post-agent && source .venv/bin/activate</code></td></tr>
+  <tr><td><code>Executable doesn't exist ... chromium</code></td>
+      <td>Пропущена команда <code>playwright install chromium</code>.</td></tr>
+  <tr><td><code>tg_ask.py</code> ждёт вечно, хотя вы ответили</td>
+      <td>Не отключён privacy mode (шаг 2) либо запущена вторая копия скрипта.</td></tr>
+  <tr><td><code>Conflict: terminated by other getUpdates request</code></td>
+      <td>Две копии одновременно опрашивают бота. Оставьте одну.</td></tr>
+  <tr><td><code>Bad Request: chat not found</code></td>
+      <td>Неверный <code>TELEGRAM_CHANNEL_ID</code> или бот не админ канала.</td></tr>
+  <tr><td><code>Bad Request: caption is too long</code></td>
+      <td>Текст длиннее 1024 знаков. Попросите сократить и запустите снова.</td></tr>
+  <tr><td><code>can't parse entities</code></td>
+      <td>В тексте тег, которого Telegram не понимает — чаще всего
+      <code>&lt;ul&gt;</code> или <code>&lt;h2&gt;</code>.</td></tr>
+  <tr><td>Пост пришёл вам в личку, а не в канал</td>
+      <td>Перепутаны <code>TELEGRAM_CHAT_ID</code>
+      и <code>TELEGRAM_CHANNEL_ID</code> в <code>.env</code>.</td></tr>
+  <tr><td>Заголовок вылезает за плашку</td>
+      <td>Больше 90 знаков. Если в лимите — уменьшите <code>--title-size</code>
+      в <code>templates/cover.html</code>.</td></tr>
+  <tr><td>Текст на обложке не читается</td>
+      <td>Светлое фото. Увеличьте <code>--photo-dim</code> в шаблоне.</td></tr>
+  <tr><td>Агент предлагает одни и те же темы</td>
+      <td>В <code>state/ideas-history.jsonl</code> не дописываются строки.</td></tr>
+  <tr><td>Шрифты выглядят «не так»</td>
+      <td>Не было интернета в момент рендера. Перезапустите
+      <code>render_cover.py</code>.</td></tr>
+</table>
+
+<div class="box tip">
+  <span class="bt">Универсальный приём</span>
+  <p>Скопируйте текст ошибки целиком и покажите его самому агенту в окне
+  <code>claude</code>: «вот такая ошибка, что не так?». В девяти случаях
+  из десяти он объяснит причину быстрее, чем поиск в интернете.</p>
+</div>
+
+<hr>
+
+<p style="color:var(--muted);font-size:15.5px">Первый пост почти всегда получается
+средним, и это нормально. Задача не в том, чтобы он вышел идеальным, а в том,
+чтобы вы поняли, какую строку в каком файле поправить, чтобы завтра было лучше.</p>
+
+</div>
+
+<script>
+
+// чеклисты — состояние живёт только в памяти страницы
+const items = document.querySelectorAll('.check li');
+document.getElementById('total').textContent = items.length;
+items.forEach(li => li.addEventListener('click', () => {
+  li.classList.toggle('on');
+  document.getElementById('done').textContent =
+    document.querySelectorAll('.check li.on').length;
+}));
+
+// кнопки «копировать» у блоков кода
+document.querySelectorAll('.codewrap').forEach(w => {
+  const btn = document.createElement('button');
+  btn.className = 'copy';
+  btn.textContent = 'копировать';
+  btn.addEventListener('click', () => {
+    const text = w.querySelector('pre').innerText
+      .split('\n').map(l => l.replace(/\s*#.*$/, '').trimEnd())
+      .filter(Boolean).join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'скопировано';
+      btn.classList.add('done');
+      setTimeout(() => { btn.textContent = 'копировать'; btn.classList.remove('done'); }, 1600);
+    });
+  });
+  w.appendChild(btn);
+});
+
+</script>
+</body>
+</html>
